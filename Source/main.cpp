@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QFile>
+#include <QFileDialog>
 #include <iostream>
 
 #include <gametemplate.h>
@@ -103,6 +104,24 @@ QList<GameTemplate>* openGameTemplatesFile(QString directory) {
     }
 
     return parseGameTemplatesFile(templatesFileBytes);
+}
+
+
+QList<GameTemplate>* promptForTemplatesFile(QTextStream* standardOut) {
+    // Request the user to input a path to a file containing game templates.
+    // This can be a .pack file that contains a GameTemplates.wsd file
+    // or a direct GameTemplates.wsd file.
+    // Note: If the file is inside a pack then it must contain the "GameTemplates.wsd"
+    // string exactly. If this is not found, it will not be parsed.
+
+    *standardOut << "Please select your loosefiles_BinPC.pack or GameTemplates.wsd file.";
+    standardOut->flush();
+
+    QString fileName = QFileDialog::getOpenFileName(nullptr, ("Open File"),
+                                                      "/home",
+                                                      ("Game Templates (*.wsd *.pack)"));
+
+    return openGameTemplatesFile(fileName);
 }
 
 int main(int argc, char *argv[])
