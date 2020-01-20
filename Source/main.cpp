@@ -127,6 +127,17 @@ QList<GameTemplate>* promptForTemplatesFile(QTextStream* standardOut) {
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QTextStream standardOut(stdout);
+
+    // Prompt the user to select a valid templates file.
+    QList<GameTemplate>* templates = nullptr;
+
+    while (templates == nullptr) {
+        templates = promptForTemplatesFile(&standardOut);
+    }
+
+    standardOut << "\nLoading the game templates has completed.\n";
+
 
     return a.exec();
 }
