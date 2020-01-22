@@ -5,7 +5,7 @@ GameTemplate::GameTemplate(QObject *parent) : QObject(parent)
 
 }
 
-GameTemplate::GameTemplate(QString name, QString templateType, QList<QList<uint8_t>> data) : QObject(nullptr), name(name), templateType(templateType), data(data)
+GameTemplate::GameTemplate(QString name, QString templateType, QList<QPair<uint32_t, QList<uint8_t>>> data) : QObject(nullptr), name(name), templateType(templateType), data(data)
 {
 
 }

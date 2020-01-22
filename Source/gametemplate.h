@@ -8,12 +8,12 @@ class GameTemplate : public QObject
     Q_OBJECT
 public:
     explicit GameTemplate(QObject *parent = nullptr);
-    explicit GameTemplate(QString name, QString templateType, QList<QList<uint8_t>> data);
+    explicit GameTemplate(QString name, QString templateType, QList<QPair<uint32_t, QList<uint8_t>>> data);
     explicit GameTemplate(const GameTemplate& otherTemplate);
     void operator=(const GameTemplate& otherTemplate);
     QString name = "";
     QString templateType = "";
-    QList<QList<uint8_t>> data;
+    QList<QPair<uint32_t, QList<uint8_t>>> data;
 
 };
 

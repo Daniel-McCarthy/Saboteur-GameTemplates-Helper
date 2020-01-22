@@ -56,7 +56,7 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
         // - 4 to account for the int32 that contains the number of hashes/data pairs in the template.
         int32_t remainingData = templateSize - 8 - 4 - nameLength - 4 - templateTypeLength - 4;
         int currentByte = 0;
-        QList<QList<uint8_t>> dataRows = QList<QList<uint8_t>>();
+        QList<QPair<uint32_t, QList<uint8_t>>> dataRows = QList<QPair<uint32_t, QList<uint8_t>>>();
         while (currentByte < remainingData) {
             int32_t hash = 0;
             int32_t dataSize = 0;
@@ -72,7 +72,7 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
                 bytes.push_back(rawBytes[byteNum]);
             }
 
-            dataRows.push_back(bytes);
+            dataRows.push_back(QPair<uint32_t, QList<uint8_t>>(hash, bytes));
             currentByte += dataSize;
 
         }
