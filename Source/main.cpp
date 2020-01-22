@@ -61,7 +61,9 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
             int32_t hash = 0;
             int32_t dataSize = 0;
 
+            dataStream.setByteOrder(QDataStream::BigEndian); // Preserve original ordering for hash. (We do not need to use the number for any calculations, so keep it as it would appear in data)
             dataStream >> hash;
+            dataStream.setByteOrder(QDataStream::LittleEndian);
             dataStream >> dataSize;
             currentByte += 8;
 
