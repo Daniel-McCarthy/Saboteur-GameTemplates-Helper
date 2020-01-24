@@ -229,11 +229,18 @@ int main(int argc, char *argv[])
             }
 
             if (listArgument.toLower() == "list help") {
-                standardOut << "List command:\n\tAvailable options:\n\t\ttemplates: List the name of every game template\n\n";
+                standardOut << "List command:\n\tAvailable options:\n"
+                            << "\t\ttemplates: List the name of every game template\n"
+                            << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n";
             }
 
             if (listArgument.toLower() == "templates") {
                 listAllTemplates(templates, false, &standardOut);
+                exitList = true;
+            }
+
+            if (listArgument.toLower() == "templatesandsubtypes") {
+                listAllTemplates(templates, true, &standardOut);
                 exitList = true;
             }
 
