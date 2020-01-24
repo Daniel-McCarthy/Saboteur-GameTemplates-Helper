@@ -205,6 +205,40 @@ int main(int argc, char *argv[])
 
     standardOut << "\nLoading the game templates has completed.\n";
 
+    bool exit = false;
+    while (exit == false) {
+        standardOut << "Enter your command (Type \"help\" for options):\n";
+        standardOut.flush();
+        QString command = "";
+
+        std::string inputRaw;
+        std::getline(std::cin, inputRaw);
+        QString input = QString::fromStdString(inputRaw);
+
+        if (input.toLower() == "list") {
+            standardOut << "List: Please enter an argument to list. (Enter \"list help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
+            standardOut.flush();
+            bool exitList = false;
+
+            std::string listRawInput;
+            std::getline(std::cin, listRawInput);
+            QString listArgument = QString::fromStdString(listRawInput);
+
+            if (listArgument.toLower() == "exit") {
+                exitList = true;
+            }
+
+            if (listArgument.toLower() == "list help") {
+                standardOut << "List command:\n\tAvailable options:\n\t\ttemplates: List the name of every game template\n\n";
+            }
+
+            if (listArgument.toLower() == "templates") {
+                listAllTemplates(templates, false, &standardOut);
+                exitList = true;
+            }
+
+        }
+    }
 
     return a.exec();
 }
