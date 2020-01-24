@@ -231,7 +231,8 @@ int main(int argc, char *argv[])
             if (listArgument.toLower() == "list help") {
                 standardOut << "List command:\n\tAvailable options:\n"
                             << "\t\ttemplates: List the name of every game template\n"
-                            << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n";
+                            << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n"
+                            << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n";
             }
 
             if (listArgument.toLower() == "templates") {
@@ -241,6 +242,12 @@ int main(int argc, char *argv[])
 
             if (listArgument.toLower() == "templatesandsubtypes") {
                 listAllTemplates(templates, true, &standardOut);
+                exitList = true;
+            }
+
+            // List all existing subtypes (no duplicates, sort alphabetically)
+            if (listArgument.toLower() == "subtypes") {
+                listAllSubTypes(templates, &standardOut);
                 exitList = true;
             }
 
