@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <gametemplate.h>
+#include <list.h>
 
 using namespace std;
 
@@ -132,36 +133,6 @@ QList<GameTemplate>* openGameTemplatesFile(QString directory) {
     return parseGameTemplatesFile(templatesFileBytes);
 }
 
-void listAllTemplates(QList<GameTemplate>* templates, bool includeSubTypes, QTextStream* standardOut) {
-    *standardOut << "Listing all Game Templates:\n";
-
-    for (int i = 0; i < templates->count(); i++) {
-        *standardOut << "\t" << templates->at(i).name << "\n";
-        if (includeSubTypes) {
-            *standardOut << "\t\t" << templates->at(i).templateType << "\n";
-        }
-        standardOut->flush();
-    }
-}
-
-void listAllSubTypes(QList<GameTemplate>* templates, QTextStream* standardOut) {
-    QList<QString> subtypes = QList<QString>();
-
-    for (int i = 0; i < templates->length(); i++) {
-        QString templateType = templates->at(i).templateType;
-        if (subtypes.contains(templateType) == false) {
-            subtypes.push_back(templateType);
-        }
-    }
-
-    subtypes.sort(Qt::CaseSensitivity::CaseInsensitive);
-    *standardOut << "\nListing all loaded template sub-types:\n";
-    for (int i = 0; i < subtypes.length(); i++) {
-        *standardOut << "\t" << subtypes.at(i) << "\n";
-    }
-}
-
-
 bool templateNameExists(QList<GameTemplate>* templates, QString templateName) {
     bool templateFound = false;
     int i = 0;
@@ -172,7 +143,6 @@ bool templateNameExists(QList<GameTemplate>* templates, QString templateName) {
 
     return templateFound;
 }
-
 
 QList<GameTemplate>* promptForTemplatesFile(QTextStream* standardOut) {
     // Request the user to input a path to a file containing game templates.
@@ -236,18 +206,18 @@ int main(int argc, char *argv[])
             }
 
             if (listArgument.toLower() == "templates") {
-                listAllTemplates(templates, false, &standardOut);
+                List::listAllTemplates(templates, false, &standardOut);
                 exitList = true;
             }
 
             if (listArgument.toLower() == "templatesandsubtypes") {
-                listAllTemplates(templates, true, &standardOut);
+                List::listAllTemplates(templates, true, &standardOut);
                 exitList = true;
             }
 
             // List all existing subtypes (no duplicates, sort alphabetically)
             if (listArgument.toLower() == "subtypes") {
-                listAllSubTypes(templates, &standardOut);
+                List::listAllSubTypes(templates, &standardOut);
                 exitList = true;
             }
 
