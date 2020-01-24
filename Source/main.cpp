@@ -95,6 +95,13 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
             }
         }
 
+        // If there's not enough data for a template or the 8 - 0 - 0 data structure,
+        // simply skip to the end of the file to terminate looping.
+        int bytesLeft = bytes.length() - dataStream.device()->pos();
+        if (bytesLeft < 12) {
+            dataStream.skipRawData(bytesLeft);
+        }
+
         templates->push_back(GameTemplate(name, templateType, dataRows));
         currentTemplate++;
     }
