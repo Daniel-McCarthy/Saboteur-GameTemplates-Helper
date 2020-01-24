@@ -162,6 +162,18 @@ void listAllSubTypes(QList<GameTemplate>* templates, QTextStream* standardOut) {
 }
 
 
+bool templateNameExists(QList<GameTemplate>* templates, QString templateName) {
+    bool templateFound = false;
+    int i = 0;
+    while (templateFound == false && i < templates->length()) {
+        templateFound = templates->at(i).name.toLower() == templateName.toLower();
+        i++;
+    }
+
+    return templateFound;
+}
+
+
 QList<GameTemplate>* promptForTemplatesFile(QTextStream* standardOut) {
     // Request the user to input a path to a file containing game templates.
     // This can be a .pack file that contains a GameTemplates.wsd file
