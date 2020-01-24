@@ -144,6 +144,23 @@ void listAllTemplates(QList<GameTemplate>* templates, bool includeSubTypes, QTex
     }
 }
 
+void listAllSubTypes(QList<GameTemplate>* templates, QTextStream* standardOut) {
+    QList<QString> subtypes = QList<QString>();
+
+    for (int i = 0; i < templates->length(); i++) {
+        QString templateType = templates->at(i).templateType;
+        if (subtypes.contains(templateType) == false) {
+            subtypes.push_back(templateType);
+        }
+    }
+
+    subtypes.sort(Qt::CaseSensitivity::CaseInsensitive);
+    *standardOut << "\nListing all loaded template sub-types:\n";
+    for (int i = 0; i < subtypes.length(); i++) {
+        *standardOut << "\t" << subtypes.at(i) << "\n";
+    }
+}
+
 
 QList<GameTemplate>* promptForTemplatesFile(QTextStream* standardOut) {
     // Request the user to input a path to a file containing game templates.
