@@ -132,6 +132,18 @@ QList<GameTemplate>* openGameTemplatesFile(QString directory) {
     return parseGameTemplatesFile(templatesFileBytes);
 }
 
+void listAllTemplates(QList<GameTemplate>* templates, bool includeSubTypes, QTextStream* standardOut) {
+    *standardOut << "Listing all Game Templates:\n";
+
+    for (int i = 0; i < templates->count(); i++) {
+        *standardOut << "\t" << templates->at(i).name << "\n";
+        if (includeSubTypes) {
+            *standardOut << "\t\t" << templates->at(i).templateType << "\n";
+        }
+        standardOut->flush();
+    }
+}
+
 
 QList<GameTemplate>* promptForTemplatesFile(QTextStream* standardOut) {
     // Request the user to input a path to a file containing game templates.
