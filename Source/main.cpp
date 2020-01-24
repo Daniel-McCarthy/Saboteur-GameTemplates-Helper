@@ -19,7 +19,8 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
 
     QList<GameTemplate>* templates = new QList<GameTemplate>();
 
-    for (int i = 0; i < totalTemplates; i++) {
+    int currentTemplate = 0;
+    while (dataStream.device()->pos() < bytes.length()) {
         int32_t templateSize = 0;
         dataStream >> templateSize;
 
@@ -78,8 +79,8 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
             currentByte += dataSize;
 
         }
-        int currentDSPosition = dataStream.device()->pos();
         templates->push_back(GameTemplate(name, templateType, dataRows));
+        currentTemplate++;
     }
     return templates;
 }
