@@ -79,6 +79,22 @@ QList<GameTemplate>* parseGameTemplatesFile(QByteArray bytes) {
             currentByte += dataSize;
 
         }
+
+        bool checkForTrailingDataFinished = false;
+        while (checkForTrailingDataFinished == false) {
+            QByteArray peekBytes = dataStream.device()->peek(12);
+            char matchBytes[12] = { 8, 0, 0, 0,
+                                    0, 0, 0, 0,
+                                    0, 0, 0, 0 };
+            QByteArray matchCase = QByteArray(matchBytes, 12);
+
+            if (peekBytes == matchCase) {
+                dataStream.skipRawData(12);
+            } else {
+                checkForTrailingDataFinished = true;
+            }
+        }
+
         templates->push_back(GameTemplate(name, templateType, dataRows));
         currentTemplate++;
     }
