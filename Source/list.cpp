@@ -18,7 +18,7 @@ void List::listAllTemplates(QList<GameTemplate>* templates, bool includeSubTypes
     }
 }
 
-void listAllSubTypes(QList<GameTemplate>* templates, QTextStream* standardOut) {
+void List::listAllSubTypes(QList<GameTemplate>* templates, QTextStream* standardOut) {
     QList<QString> subtypes = QList<QString>();
 
     for (int i = 0; i < templates->length(); i++) {
@@ -33,4 +33,38 @@ void listAllSubTypes(QList<GameTemplate>* templates, QTextStream* standardOut) {
     for (int i = 0; i < subtypes.length(); i++) {
         *standardOut << "\t" << subtypes.at(i) << "\n";
     }
+}
+
+bool List::listAllTemplatesofSubType(QList<GameTemplate>* templates, QString subtype, QTextStream* standardOut) {
+    *standardOut << "Listing all Game Templates of type \"" << subtype << "\":\n";
+
+    if (templates->length() == 0) {
+        *standardOut << "\tNo templates exist.\n";
+        standardOut->flush();
+        return false;
+    }
+
+    QList<QString> templatesFound = QList<QString>();
+
+    for (int i = 0; i < templates->length(); i++) {
+        if (templates->at(i).templateType.toLower() == subtype.toLower()) {
+            templatesFound.push_back(templates->at(i).name);
+        }
+    }
+
+    if (templatesFound.length() == 0) {
+        *standardOut << "\tNo templates found with the entered subtype.\n";
+        standardOut->flush();
+        return false;
+    }
+
+    if (templatesFound.length() > 1) {
+        templatesFound.sort(Qt::CaseSensitivity::CaseSensitive);
+    }
+
+    for (int i = 0; i < templatesFound.length(); i++) {
+        *standardOut << "\t" << templatesFound.at(i) << "\n";
+        standardOut->flush();
+    }
+    return true;
 }

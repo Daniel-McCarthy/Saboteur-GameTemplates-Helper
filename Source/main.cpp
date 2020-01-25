@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 
     bool exit = false;
     while (exit == false) {
-        standardOut << "Enter your command (Type \"help\" for options):\n";
+        standardOut << "\nEnter your command (Type \"help\" for options):\n";
         standardOut.flush();
         QString command = "";
 
@@ -202,6 +202,7 @@ int main(int argc, char *argv[])
                 standardOut << "List command:\n\tAvailable options:\n"
                             << "\t\ttemplates: List the name of every game template\n"
                             << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n"
+                            << "\t\ttemplatesOfSubtype: List all of the templates with a given user entered subtype.\n"
                             << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n";
             }
 
@@ -221,6 +222,29 @@ int main(int argc, char *argv[])
                 exitList = true;
             }
 
+            // List all templates that have a specific subtype (alphabetical order)
+            if (listArgument.toLower() == "templatesofsubtype") {
+                //Take input for what kind of subtype
+                // or allow to back out.
+                bool exit = false;
+                while (exit == false) {
+                    standardOut << "\nPlease enter the name of the subtype you wish to list templates for (or \"exit\" to back out.):\n";
+                    standardOut.flush();
+                    std::string listRawInput;
+                    std::getline(std::cin, listRawInput);
+                    QString subtypeEntered = QString::fromStdString(listRawInput);
+
+                    if (subtypeEntered.toLower() == "exit") {
+                        exit = true;
+                    } else {
+                        bool resultsFound = List::listAllTemplatesofSubType(templates, subtypeEntered, &standardOut);
+                        if (resultsFound == true) {
+                            exit = true;
+                        }
+                        standardOut << "Please try again by entering another subtype or \"exit\" to back out.";
+                    }
+                }
+            }
         }
     }
 
