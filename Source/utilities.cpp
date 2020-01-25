@@ -26,3 +26,7 @@ QString Utilities::intToASCII(int32_t number, bool reverseEndian = false) {
 
     return asciiText;
 }
+
+QString Utilities::uintToHex(uint32_t number) {
+    return QString("%1").arg(number, 8, 16, QLatin1Char( '0' )).toUpper();
+}

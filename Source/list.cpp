@@ -76,9 +76,10 @@ bool List::listHashesOfTemplate(QList<GameTemplate>* templates, QString template
     for (int i = 0; i < templates->length(); i++) {
         const GameTemplate* currentTemplate = &templates->at(i);
         if (currentTemplate->name == templateName) {
+
             for (int hashIndex = 0; hashIndex < currentTemplate->data.length(); hashIndex++) {
                 uint32_t hashValue = currentTemplate->data.at(hashIndex).first;
-                QString hashAsHex = QString("%1").arg(hashValue, 8, 16, QLatin1Char( '0' )).toUpper();
+                QString hashAsHex = Utilities::uintToHex(hashValue);
                 *standardOut << "\tHash: " << hashAsHex;
                 *standardOut << "\t" << Utilities::intToASCII(hashValue, true);
 
