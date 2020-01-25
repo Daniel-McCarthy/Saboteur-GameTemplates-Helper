@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
         QString input = QString::fromStdString(inputRaw);
 
         if (input.toLower() == "list") {
-            standardOut << "List: Please enter an argument to list. (Enter \"list help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
+            standardOut << "\nList: Please enter an argument to list. (Enter \"list help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
             standardOut.flush();
             bool exitList = false;
 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
             }
 
             if (listArgument.toLower() == "list help") {
-                standardOut << "List command:\n\tAvailable options:\n"
+                standardOut << "\nList command:\n\tAvailable options:\n"
                             << "\t\ttemplates: List the name of every game template\n"
                             << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n"
                             << "\t\ttemplatesOfSubtype: List all of the templates with a given user entered subtype.\n"
