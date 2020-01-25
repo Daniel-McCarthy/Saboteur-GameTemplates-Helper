@@ -204,6 +204,7 @@ int main(int argc, char *argv[])
                             << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n"
                             << "\t\ttemplatesOfSubtype: List all of the templates with a given user entered subtype.\n"
                             << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
+                            << "\t\ttemplatesWithHash: List all templates that have a given user entered hexadecimal 4 byte hash.\n"
                             << "\t\thashesOfTemplate: List all of the hash identifiers of a user entered template.\n"
                             << "\t\thashesAndValuesOfTemplate: List all of the hash identifiers and associated values of a user entered template.\n";
             }
@@ -269,6 +270,32 @@ int main(int argc, char *argv[])
                             exit = true;
                         }
                         standardOut << "Please try again by entering another subtype or \"exit\" to back out.";
+                    }
+                }
+            }
+
+            // List all game templates that have a particular user entered hash value (and the data associated with that hash).
+            if (listArgument.toLower() == "templateswithhash") {
+                bool exit = false;
+                while (exit == false) {
+                    standardOut << "\nPlease enter the hexadecimal of the hash you wish to search and list templates for (for example: 049A02F0) (or \"exit\" to back out.):\n";
+                    standardOut.flush();
+                    std::string hashInput;
+                    std::getline(std::cin, hashInput);
+                    QString hashEntered = QString::fromStdString(hashInput);
+
+                    if (hashEntered.toLower() == "exit") {
+                        exit = true;
+                    } else {
+                        bool hashConvertedSuccess = false;
+                        uint32_t hash = hashEntered.toUInt(&hashConvertedSuccess, 16);
+
+                        if (hashConvertedSuccess) {
+                            List::listAllTemplatesWithHash(templates, hash, &standardOut);
+                            exit = true;
+                        } else {
+                            standardOut << "\tListing failed: Hash could not be handled. Please enter a hexadecimal hash such as 049A02F0.\n\n";
+                        }
                     }
                 }
             }
