@@ -203,7 +203,9 @@ int main(int argc, char *argv[])
                             << "\t\ttemplates: List the name of every game template\n"
                             << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n"
                             << "\t\ttemplatesOfSubtype: List all of the templates with a given user entered subtype.\n"
-                            << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n";
+                            << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
+                            << "\t\thashesOfTemplate: List all of the hash identifiers of a user entered template.\n"
+                            << "\t\thashesAndValuesOfTemplate: List all of the hash identifiers and associated values of a user entered template.\n";
             }
 
             if (listArgument.toLower() == "templates") {
@@ -220,6 +222,31 @@ int main(int argc, char *argv[])
             if (listArgument.toLower() == "subtypes") {
                 List::listAllSubTypes(templates, &standardOut);
                 exitList = true;
+            }
+
+            if (listArgument.toLower() == "hashesoftemplate" || listArgument.toLower() == "hashesandvaluesoftemplate") {
+                bool valuesToo = listArgument.toLower() == "hashesandvaluesoftemplate";
+
+                // Take input for what template to find
+                // or allow to back out.
+                bool exit = false;
+                while (exit == false) {
+                    standardOut << "\nPlease enter the name of the subtype you wish to list templates for (or \"exit\" to back out.):\n";
+                    standardOut.flush();
+                    std::string listRawInput;
+                    std::getline(std::cin, listRawInput);
+                    QString templateEntered = QString::fromStdString(listRawInput);
+
+                    if (templateEntered.toLower() == "exit") {
+                        exit = true;
+                    } else {
+                        bool resultsFound = List::listHashesOfTemplate(templates, templateEntered, valuesToo, &standardOut);
+                        if (resultsFound == true) {
+                            exit = true;
+                        }
+                        standardOut << "Please try again by entering another subtype or \"exit\" to back out.";
+                    }
+                }
             }
 
             // List all templates that have a specific subtype (alphabetical order)

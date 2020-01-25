@@ -1,5 +1,6 @@
 #include "list.h"
 #include "gametemplate.h"
+#include "utilities.h"
 
 List::List()
 {
@@ -67,4 +68,31 @@ bool List::listAllTemplatesofSubType(QList<GameTemplate>* templates, QString sub
         standardOut->flush();
     }
     return true;
+}
+
+bool List::listHashesOfTemplate(QList<GameTemplate>* templates, QString templateName, bool printValuesToo, QTextStream* standardOut) {
+    *standardOut << "Listing all Hashes of template \"" << templateName << "\":\n";
+
+    for (int i = 0; i < templates->length(); i++) {
+        const GameTemplate* currentTemplate = &templates->at(i);
+        if (currentTemplate->name == templateName) {
+            for (int hashIndex = 0; hashIndex < currentTemplate->data.length(); hashIndex++) {
+                uint32_t hashValue = currentTemplate->data.at(hashIndex).first;
+                QString hashAsHex = QString("%1").arg(hashValue, 8, 16, QLatin1Char( '0' )).toUpper();
+                *standardOut << "\tHash: " << hashAsHex;
+                *standardOut << "\t" << Utilities::intToASCII(hashValue, true);
+
+                if (printValuesToo == true) {
+                    *standardOut << "\tData: " << currentTemplate->data.at(hashIndex).second.toHex().toUpper() << "\n";
+                } else {
+                    *standardOut << "\n";
+                }
+            }
+            return true;
+        }
+    }
+
+    *standardOut << "\tNo such template name found.\n\n";
+    standardOut->flush();
+    return false;
 }

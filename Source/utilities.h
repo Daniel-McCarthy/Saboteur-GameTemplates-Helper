@@ -7,7 +7,7 @@ class Utilities
 {
 public:
     Utilities();
-    static QString intToASCII(int32_t number, bool reverseEndian = false);
+    static QString intToASCII(int32_t number, bool reverseEndian);
 };
 
 #endif // UTILITIES_H
