@@ -18,6 +18,7 @@ SOURCES += \
         gametemplate.cpp \
         list.cpp \
         main.cpp \
+        search.cpp \
         utilities.cpp
 
 # Default rules for deployment.
@@ -28,4 +29,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     gametemplate.h \
     list.h \
+    search.h \
     utilities.h

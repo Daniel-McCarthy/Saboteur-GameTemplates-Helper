@@ -7,6 +7,7 @@
 
 #include <gametemplate.h>
 #include <list.h>
+#include <search.h>
 
 using namespace std;
 
@@ -184,6 +185,36 @@ int main(int argc, char *argv[])
         std::string inputRaw;
         std::getline(std::cin, inputRaw);
         QString input = QString::fromStdString(inputRaw);
+
+        if (input.toLower() == "search") {
+            standardOut << "\nSearch: Please enter an command for search. (Enter \"search help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
+            standardOut.flush();
+            bool exitList = false;
+
+            std::string searchRawInput;
+            std::getline(std::cin, searchRawInput);
+            QString searchArgument = QString::fromStdString(searchRawInput);
+
+            if (searchArgument.toLower() == "exit") {
+                exitList = true;
+            }
+
+            if (searchArgument.toLower() == "search help") {
+                standardOut << "\nSearch command:\n\tAvailable options:\n"
+                            << "\t\ttemplatesWithKeyword: List any game template that have names containing the user entered keyword.\n";
+            }
+
+            if (searchArgument.toLower() == "templateswithkeyword") {
+                standardOut << "\nPlease enter the text you wish to search template names for (or \"exit\" to back out.):\n";
+                standardOut.flush();
+                std::string keywordRaw;
+                std::getline(std::cin, keywordRaw);
+                QString keywordEntered = QString::fromStdString(keywordRaw);
+
+                Search::searchTemplatesForKeyword(templates, keywordEntered, &standardOut);
+            }
+
+        }
 
         if (input.toLower() == "list") {
             standardOut << "\nList: Please enter an argument to list. (Enter \"list help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
