@@ -203,8 +203,9 @@ int main(int argc, char *argv[])
                             << "\t\ttemplates: List the name of every game template\n"
                             << "\t\ttemplatesAndSubtypes: List the name and subtype of each game template.\n"
                             << "\t\ttemplatesOfSubtype: List all of the templates with a given user entered subtype.\n"
-                            << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
                             << "\t\ttemplatesWithHash: List all templates that have a given user entered hexadecimal 4 byte hash.\n"
+                            << "\t\ttemplatesWithHashAndDataPair: List all templates that have a given user hexadecimal hash that is paired with a user entered set of byte data.\n"
+                            << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
                             << "\t\thashesOfTemplate: List all of the hash identifiers of a user entered template.\n"
                             << "\t\thashesAndValuesOfTemplate: List all of the hash identifiers and associated values of a user entered template.\n";
             }
@@ -299,6 +300,46 @@ int main(int argc, char *argv[])
                     }
                 }
             }
+
+            // List all game templates that have a particular user entered hash value and also have an associated user entered data value.
+            if (listArgument.toLower() == "templateswithhashanddatapair") {
+                bool exit = false;
+                while (exit == false) {
+                    standardOut << "\nPlease enter the hexadecimal of the hash you wish to search and list templates for (for example: 049A02F0) (or \"exit\" to back out.):\n";
+                    standardOut.flush();
+                    std::string hashInput;
+                    std::getline(std::cin, hashInput);
+                    QString hashEntered = QString::fromStdString(hashInput);
+
+                    standardOut << "\nPlease enter the hexadecimal of the data you wish to find being paired with the previous entered hash (for example: 049A02F0) (or \"exit\" to back out.):\n";
+                    standardOut.flush();
+                    std::string dataInput;
+                    std::getline(std::cin, dataInput);
+                    QString dataEntered = QString::fromStdString(dataInput);
+                    QByteArray dataArray = QByteArray();//::fromStdString(dataInput);
+
+                    while (dataEntered.length() >= 2) {
+                        QString byteString = dataEntered.left(2);
+                        dataEntered = dataEntered.right(dataEntered.length() - 2);
+                        dataArray.push_back(byteString.toUInt(nullptr, 16) & 0xFF);
+                    }
+
+                    if (hashEntered.toLower() == "exit") {
+                        exit = true;
+                    } else {
+                        bool hashConvertedSuccess = false;
+                        uint32_t hash = hashEntered.toUInt(&hashConvertedSuccess, 16);
+
+                        if (hashConvertedSuccess) {
+                            List::listAllTemplatesWithHashAndValuePair(templates, hash, dataArray,  &standardOut);
+                            exit = true;
+                        } else {
+                            standardOut << "\tListing failed: Hash could not be handled. Please enter a hexadecimal hash such as 049A02F0.\n\n";
+                        }
+                    }
+                }
+            }
+
         }
     }
 

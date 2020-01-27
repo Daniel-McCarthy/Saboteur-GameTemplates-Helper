@@ -128,3 +128,34 @@ void List::listAllTemplatesWithHash(QList<GameTemplate>* templates, uint32_t has
     }
     standardOut->flush();
 }
+
+void List::listAllTemplatesWithHashAndValuePair(QList<GameTemplate>* templates, uint32_t hash, QByteArray data, QTextStream* standardOut) {
+    *standardOut << "Listing all templates that contain the hash \"" << Utilities::uintToHex(hash) << "\"" << " with the data \"" << data.toHex().toUpper() << "\":\n";
+    bool anyHashesFound = false;
+
+    for (int i = 0; i < templates->length(); i++) {
+        const GameTemplate* currentTemplate = &(templates->at(i));
+        QList<QPair<uint32_t, QByteArray>> hashesFound = QList<QPair<uint32_t, QByteArray>>();
+
+        for (int hashIndex = 0; hashIndex < currentTemplate->data.length(); hashIndex++) {
+            if (currentTemplate->data.at(hashIndex).first == hash && currentTemplate->data.at(hashIndex).second == data) {
+                anyHashesFound = true;
+                hashesFound.push_back(QPair<uint32_t, QByteArray>(currentTemplate->data.at(hashIndex).first, currentTemplate->data.at(hashIndex).second));
+            }
+        }
+
+        if (hashesFound.length() > 0) {
+            *standardOut << "\t" << currentTemplate->name << ":\n";
+            for (int j = 0; j < hashesFound.length(); j++) {
+                uint32_t foundHash = hashesFound.at(j).first;
+                QString hashAsHex = Utilities::uintToHex(foundHash);
+                *standardOut << "\t\tHash: " << hashAsHex << " " << Utilities::intToASCII(foundHash, true) << " Data: " << hashesFound.at(j).second.toHex().toUpper() << "\n";
+            }
+        }
+    }
+
+    if (anyHashesFound == false) {
+        *standardOut << "\tHash not found in any template.\n";
+    }
+    standardOut->flush();
+}
