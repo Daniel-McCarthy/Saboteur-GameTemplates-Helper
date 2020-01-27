@@ -207,6 +207,7 @@ int main(int argc, char *argv[])
                             << "\t\ttemplatesWithHashAndDataPair: List all templates that have a given user hexadecimal hash that is paired with a user entered set of byte data.\n"
                             << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
                             << "\t\thashesOfTemplate: List all of the hash identifiers of a user entered template.\n"
+                            << "\t\thashesOfTemplateWithDataSize: List all hashes of a specific template that has a data size matching a user entered number.\n"
                             << "\t\thashesAndValuesOfTemplate: List all of the hash identifiers and associated values of a user entered template.\n";
             }
 
@@ -247,6 +248,33 @@ int main(int argc, char *argv[])
                             exit = true;
                         }
                         standardOut << "Please try again by entering another subtype or \"exit\" to back out.";
+                    }
+                }
+            }
+
+            // List all hashes of a specific user entered template that has paired data that matches a numerical size entered by the user.
+            if (listArgument.toLower() == "hashesoftemplatewithdatasize") {
+                // Take input for what template to find
+                // or allow to back out.
+                bool exit = false;
+                while (exit == false) {
+                    standardOut << "\nPlease enter the name of the template you wish to list hashes for (or \"exit\" to back out.):\n";
+                    standardOut.flush();
+                    std::string listRawInput;
+                    std::getline(std::cin, listRawInput);
+                    QString templateEntered = QString::fromStdString(listRawInput);
+
+                    standardOut << "\nPlease enter the size of the data you wish to find hashes associated with.:\n";
+                    standardOut.flush();
+                    std::string dataSizeRawInput;
+                    std::getline(std::cin, dataSizeRawInput);
+                    uint sizeEntered = QString::fromStdString(dataSizeRawInput).toUInt(nullptr);
+
+                    if (templateEntered.toLower() == "exit") {
+                        exit = true;
+                    } else {
+                        List::listHashesOfTemplatesWithDataOfSize(templates, templateEntered, sizeEntered, &standardOut);
+                        exit = true;
                     }
                 }
             }

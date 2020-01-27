@@ -159,3 +159,36 @@ void List::listAllTemplatesWithHashAndValuePair(QList<GameTemplate>* templates, 
     }
     standardOut->flush();
 }
+
+bool List::listHashesOfTemplatesWithDataOfSize(QList<GameTemplate>* templates, QString templateName, uint size, QTextStream* standardOut) {
+    *standardOut << "Listing all Hashes of template \"" << templateName << "\" with data of size " << size << ":\n";
+    bool hashPrinted = false;
+
+    for (int i = 0; i < templates->length(); i++) {
+        const GameTemplate* currentTemplate = &templates->at(i);
+        if (currentTemplate->name == templateName) {
+
+            for (int hashIndex = 0; hashIndex < currentTemplate->data.length(); hashIndex++) {
+                if (currentTemplate->data.at(hashIndex).second.length() == size) {
+                    uint32_t hashValue = currentTemplate->data.at(hashIndex).first;
+                    QString hashAsHex = Utilities::uintToHex(hashValue);
+                    *standardOut << "\tHash: " << hashAsHex;
+                    *standardOut << "\t" << Utilities::intToASCII(hashValue, true);
+
+                    *standardOut << "\tData: " << currentTemplate->data.at(hashIndex).second.toHex().toUpper() << "\n";
+                    hashPrinted = true;
+                }
+            }
+
+            if (hashPrinted == false) {
+                *standardOut << "\tNo hashes of size " << size << " found.\n";
+            }
+
+            return true;
+        }
+    }
+
+    *standardOut << "\tNo such template name found.\n\n";
+    standardOut->flush();
+    return false;
+}
