@@ -201,7 +201,8 @@ int main(int argc, char *argv[])
 
             if (searchArgument.toLower() == "search help") {
                 standardOut << "\nSearch command:\n\tAvailable options:\n"
-                            << "\t\ttemplatesWithKeyword: List any game template that have names containing the user entered keyword.\n";
+                            << "\t\ttemplatesWithKeyword: List any game template that have names containing the user entered keyword.\n"
+                            << "\t\ttemplatesOfSubtypeWithKeyword: List any game template of a user entered subtype that contain a user entered keyword.\n";
             }
 
             if (searchArgument.toLower() == "templateswithkeyword") {
@@ -214,6 +215,24 @@ int main(int argc, char *argv[])
                 Search::searchTemplatesForKeyword(templates, keywordEntered, &standardOut);
             }
 
+            if (searchArgument.toLower() == "templatesofsubtypewithkeyword") {
+                standardOut << "\nPlease enter the name of the subtype you wish to list templates for (or \"exit\" to back out.):\n";
+                standardOut.flush();
+                std::string subtypeRawInput;
+                std::getline(std::cin, subtypeRawInput);
+                QString subtypeEntered = QString::fromStdString(subtypeRawInput);
+
+                standardOut << "\nPlease enter the text you wish to search template names for:\n";
+                standardOut.flush();
+                std::string keywordRaw;
+                std::getline(std::cin, keywordRaw);
+                QString keywordEntered = QString::fromStdString(keywordRaw);
+
+                if (subtypeEntered != "exit") {
+                    Search::searchTemplatesofSubtypeForKeyword(templates, subtypeEntered, keywordEntered, &standardOut);
+                }
+            }
+        }
         }
 
         if (input.toLower() == "list") {
