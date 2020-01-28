@@ -189,15 +189,10 @@ int main(int argc, char *argv[])
         if (input.toLower() == "search") {
             standardOut << "\nSearch: Please enter an command for search. (Enter \"search help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
             standardOut.flush();
-            bool exitList = false;
 
             std::string searchRawInput;
             std::getline(std::cin, searchRawInput);
             QString searchArgument = QString::fromStdString(searchRawInput);
-
-            if (searchArgument.toLower() == "exit") {
-                exitList = true;
-            }
 
             if (searchArgument.toLower() == "search help") {
                 standardOut << "\nSearch command:\n\tAvailable options:\n"
@@ -238,15 +233,10 @@ int main(int argc, char *argv[])
         if (input.toLower() == "list") {
             standardOut << "\nList: Please enter an argument to list. (Enter \"list help\" for command choices. Or enter \"exit\" to enter a new command.)\n";
             standardOut.flush();
-            bool exitList = false;
 
             std::string listRawInput;
             std::getline(std::cin, listRawInput);
             QString listArgument = QString::fromStdString(listRawInput);
-
-            if (listArgument.toLower() == "exit") {
-                exitList = true;
-            }
 
             if (listArgument.toLower() == "list help") {
                 standardOut << "\nList command:\n\tAvailable options:\n"
@@ -263,18 +253,15 @@ int main(int argc, char *argv[])
 
             if (listArgument.toLower() == "templates") {
                 List::listAllTemplates(templates, false, &standardOut);
-                exitList = true;
             }
 
             if (listArgument.toLower() == "templatesandsubtypes") {
                 List::listAllTemplates(templates, true, &standardOut);
-                exitList = true;
             }
 
             // List all existing subtypes (no duplicates, sort alphabetically)
             if (listArgument.toLower() == "subtypes") {
                 List::listAllSubTypes(templates, &standardOut);
-                exitList = true;
             }
 
             if (listArgument.toLower() == "hashesoftemplate" || listArgument.toLower() == "hashesandvaluesoftemplate") {
@@ -282,8 +269,8 @@ int main(int argc, char *argv[])
 
                 // Take input for what template to find
                 // or allow to back out.
-                bool exit = false;
-                while (exit == false) {
+                bool exitList = false;
+                while (exitList == false) {
                     standardOut << "\nPlease enter the name of the subtype you wish to list templates for (or \"exit\" to back out.):\n";
                     standardOut.flush();
                     std::string listRawInput;
@@ -291,11 +278,11 @@ int main(int argc, char *argv[])
                     QString templateEntered = QString::fromStdString(listRawInput);
 
                     if (templateEntered.toLower() == "exit") {
-                        exit = true;
+                        exitList = true;
                     } else {
                         bool resultsFound = List::listHashesOfTemplate(templates, templateEntered, valuesToo, &standardOut);
                         if (resultsFound == true) {
-                            exit = true;
+                            exitList = true;
                         }
                         standardOut << "Please try again by entering another subtype or \"exit\" to back out.";
                     }
@@ -306,8 +293,8 @@ int main(int argc, char *argv[])
             if (listArgument.toLower() == "hashesoftemplatewithdatasize") {
                 // Take input for what template to find
                 // or allow to back out.
-                bool exit = false;
-                while (exit == false) {
+                bool exitList = false;
+                while (exitList == false) {
                     standardOut << "\nPlease enter the name of the template you wish to list hashes for (or \"exit\" to back out.):\n";
                     standardOut.flush();
                     std::string listRawInput;
@@ -321,10 +308,10 @@ int main(int argc, char *argv[])
                     uint sizeEntered = QString::fromStdString(dataSizeRawInput).toUInt(nullptr);
 
                     if (templateEntered.toLower() == "exit") {
-                        exit = true;
+                        exitList = true;
                     } else {
                         List::listHashesOfTemplatesWithDataOfSize(templates, templateEntered, sizeEntered, &standardOut);
-                        exit = true;
+                        exitList = true;
                     }
                 }
             }
@@ -333,8 +320,8 @@ int main(int argc, char *argv[])
             if (listArgument.toLower() == "templatesofsubtype") {
                 //Take input for what kind of subtype
                 // or allow to back out.
-                bool exit = false;
-                while (exit == false) {
+                bool exitList = false;
+                while (exitList == false) {
                     standardOut << "\nPlease enter the name of the subtype you wish to list templates for (or \"exit\" to back out.):\n";
                     standardOut.flush();
                     std::string listRawInput;
@@ -342,11 +329,11 @@ int main(int argc, char *argv[])
                     QString subtypeEntered = QString::fromStdString(listRawInput);
 
                     if (subtypeEntered.toLower() == "exit") {
-                        exit = true;
+                        exitList = true;
                     } else {
                         bool resultsFound = List::listAllTemplatesofSubType(templates, subtypeEntered, &standardOut);
                         if (resultsFound == true) {
-                            exit = true;
+                            exitList = true;
                         }
                         standardOut << "Please try again by entering another subtype or \"exit\" to back out.";
                     }
@@ -355,8 +342,8 @@ int main(int argc, char *argv[])
 
             // List all game templates that have a particular user entered hash value (and the data associated with that hash).
             if (listArgument.toLower() == "templateswithhash") {
-                bool exit = false;
-                while (exit == false) {
+                bool exitList = false;
+                while (exitList == false) {
                     standardOut << "\nPlease enter the hexadecimal of the hash you wish to search and list templates for (for example: 049A02F0) (or \"exit\" to back out.):\n";
                     standardOut.flush();
                     std::string hashInput;
@@ -364,14 +351,14 @@ int main(int argc, char *argv[])
                     QString hashEntered = QString::fromStdString(hashInput);
 
                     if (hashEntered.toLower() == "exit") {
-                        exit = true;
+                        exitList = true;
                     } else {
                         bool hashConvertedSuccess = false;
                         uint32_t hash = hashEntered.toUInt(&hashConvertedSuccess, 16);
 
                         if (hashConvertedSuccess) {
                             List::listAllTemplatesWithHash(templates, hash, &standardOut);
-                            exit = true;
+                            exitList = true;
                         } else {
                             standardOut << "\tListing failed: Hash could not be handled. Please enter a hexadecimal hash such as 049A02F0.\n\n";
                         }
@@ -381,8 +368,8 @@ int main(int argc, char *argv[])
 
             // List all game templates that have a particular user entered hash value and also have an associated user entered data value.
             if (listArgument.toLower() == "templateswithhashanddatapair") {
-                bool exit = false;
-                while (exit == false) {
+                bool exitList = false;
+                while (exitList == false) {
                     standardOut << "\nPlease enter the hexadecimal of the hash you wish to search and list templates for (for example: 049A02F0) (or \"exit\" to back out.):\n";
                     standardOut.flush();
                     std::string hashInput;
@@ -403,14 +390,14 @@ int main(int argc, char *argv[])
                     }
 
                     if (hashEntered.toLower() == "exit") {
-                        exit = true;
+                        exitList = true;
                     } else {
                         bool hashConvertedSuccess = false;
                         uint32_t hash = hashEntered.toUInt(&hashConvertedSuccess, 16);
 
                         if (hashConvertedSuccess) {
                             List::listAllTemplatesWithHashAndValuePair(templates, hash, dataArray,  &standardOut);
-                            exit = true;
+                            exitList = true;
                         } else {
                             standardOut << "\tListing failed: Hash could not be handled. Please enter a hexadecimal hash such as 049A02F0.\n\n";
                         }
