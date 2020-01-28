@@ -248,7 +248,8 @@ int main(int argc, char *argv[])
                             << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
                             << "\t\thashesOfTemplate: List all of the hash identifiers of a user entered template.\n"
                             << "\t\thashesOfTemplateWithDataSize: List all hashes of a specific template that has a data size matching a user entered number.\n"
-                            << "\t\thashesAndValuesOfTemplate: List all of the hash identifiers and associated values of a user entered template.\n";
+                            << "\t\thashesAndValuesOfTemplate: List all of the hash identifiers and associated values of a user entered template.\n"
+                            << "\t\tinstancesOfHashInTemplate: List all instances of a user entered hash in a user entered template.\n";
             }
 
             if (listArgument.toLower() == "templates") {
@@ -401,6 +402,33 @@ int main(int argc, char *argv[])
                         } else {
                             standardOut << "\tListing failed: Hash could not be handled. Please enter a hexadecimal hash such as 049A02F0.\n\n";
                         }
+                    }
+                }
+            }
+
+            // List all instances of a specifc user entered hash in a user entered template (if any).
+            if (listArgument.toLower() == "instancesofhashintemplate") {
+                standardOut << "\nPlease enter the name of the template you wish to list hashes for (or \"exit\" to back out.):\n";
+                standardOut.flush();
+                std::string listRawInput;
+                std::getline(std::cin, listRawInput);
+                QString templateEntered = QString::fromStdString(listRawInput);
+
+
+                standardOut << "\nPlease enter the hexadecimal of the hash you wish to search and list templates for (for example: 049A02F0):\n";
+                standardOut.flush();
+                std::string hashInput;
+                std::getline(std::cin, hashInput);
+                QString hashEntered = QString::fromStdString(hashInput);
+
+                if (templateEntered != "exit") {
+                    bool hashConvertedSuccess = false;
+                    uint32_t hash = hashEntered.toUInt(&hashConvertedSuccess, 16);
+
+                    if (hashConvertedSuccess) {
+                        List::listInstancesOfHashInTemplate(templates, templateEntered, hash, &standardOut);
+                    } else {
+                        standardOut << "\tListing failed: Hash could not be handled. Please enter a hexadecimal hash such as 049A02F0.\n\n";
                     }
                 }
             }

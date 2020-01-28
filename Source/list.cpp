@@ -70,6 +70,39 @@ bool List::listAllTemplatesofSubType(QList<GameTemplate>* templates, QString sub
     return true;
 }
 
+void List::listInstancesOfHashInTemplate(QList<GameTemplate>* templates, QString templateName, uint32_t hash, QTextStream* standardOut) {
+    *standardOut << "Listing instances of the hash \"" << Utilities::uintToHex(hash).toUpper() << " of template \"" << templateName << "\":\n";
+    bool hashFound = false;
+
+    for (int i = 0; i < templates->length(); i++) {
+        const GameTemplate* currentTemplate = &templates->at(i);
+        if (currentTemplate->name == templateName) {
+
+            for (int hashIndex = 0; hashIndex < currentTemplate->data.length(); hashIndex++) {
+                uint32_t hashValue = currentTemplate->data.at(hashIndex).first;
+
+                if (hashValue == hash) {
+                    hashFound = true;
+                    QString hashAsHex = Utilities::uintToHex(hashValue);
+                    *standardOut << "\tHash: " << hashAsHex;
+                    *standardOut << "\t" << Utilities::intToASCII(hashValue, true);
+
+                    *standardOut << "\tData: " << currentTemplate->data.at(hashIndex).second.toHex().toUpper() << "\n";
+                }
+            }
+
+            if (hashFound == false) {
+                *standardOut << "\tNo instances of the hash were found.\n\n";
+            }
+            standardOut->flush();
+            return;
+        }
+    }
+
+    *standardOut << "\tNo such template name found.\n\n";
+    standardOut->flush();
+}
+
 bool List::listHashesOfTemplate(QList<GameTemplate>* templates, QString templateName, bool printValuesToo, QTextStream* standardOut) {
     *standardOut << "Listing all Hashes of template \"" << templateName << "\":\n";
 

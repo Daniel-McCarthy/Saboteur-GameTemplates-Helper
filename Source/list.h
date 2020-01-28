@@ -13,6 +13,7 @@ public:
     static bool listAllTemplatesofSubType(QList<GameTemplate>* templates, QString subtype, QTextStream* standardOut);
     static void listAllTemplatesWithHash(QList<GameTemplate>* templates, uint32_t hash, QTextStream* standardOut);
     static void listAllTemplatesWithHashAndValuePair(QList<GameTemplate>* templates, uint32_t hash, QByteArray data, QTextStream* standardOut);
+    static void listInstancesOfHashInTemplate(QList<GameTemplate>* templates, QString templateName, uint32_t hash, QTextStream* standardOut);
     static bool listHashesOfTemplate(QList<GameTemplate>* templates, QString templateName, bool printValuesToo, QTextStream* standardOut);
     static bool listHashesOfTemplatesWithDataOfSize(QList<GameTemplate>* templates, QString templateName, uint size, QTextStream* standardOut);
 };
