@@ -16,6 +16,7 @@ public:
     static void listInstancesOfHashInTemplate(QList<GameTemplate>* templates, QString templateName, uint32_t hash, QTextStream* standardOut);
     static bool listHashesOfTemplate(QList<GameTemplate>* templates, QString templateName, bool printValuesToo, QTextStream* standardOut);
     static bool listHashesOfTemplatesWithDataOfSize(QList<GameTemplate>* templates, QString templateName, uint size, QTextStream* standardOut);
+    static void listTemplatesByModel(QList<GameTemplate>* templates, QTextStream* standardOut);
 };
 
 #endif // LIST_H

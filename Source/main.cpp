@@ -245,6 +245,7 @@ int main(int argc, char *argv[])
                             << "\t\ttemplatesOfSubtype: List all of the templates with a given user entered subtype.\n"
                             << "\t\ttemplatesWithHash: List all templates that have a given user entered hexadecimal 4 byte hash.\n"
                             << "\t\ttemplatesWithHashAndDataPair: List all templates that have a given user hexadecimal hash that is paired with a user entered set of byte data.\n"
+                            << "\t\ttemplatesByModel: List templates associated with a model hash value organized by each model hash.\n"
                             << "\t\tsubtypes: List all of the unique subtypes found in alphabetical order.\n"
                             << "\t\thashesOfTemplate: List all of the hash identifiers of a user entered template.\n"
                             << "\t\thashesOfTemplateWithDataSize: List all hashes of a specific template that has a data size matching a user entered number.\n"
@@ -406,6 +407,11 @@ int main(int argc, char *argv[])
                 }
             }
 
+            // List all templates associated with a model hash organized by each model hash.
+            if (listArgument.toLower() == "templatesbymodel") {
+                List::listTemplatesByModel(templates, &standardOut);
+            }
+
             // List all instances of a specifc user entered hash in a user entered template (if any).
             if (listArgument.toLower() == "instancesofhashintemplate") {
                 standardOut << "\nPlease enter the name of the template you wish to list hashes for (or \"exit\" to back out.):\n";
@@ -432,7 +438,6 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-
         }
     }
 

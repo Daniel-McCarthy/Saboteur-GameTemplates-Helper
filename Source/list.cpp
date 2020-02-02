@@ -225,3 +225,77 @@ bool List::listHashesOfTemplatesWithDataOfSize(QList<GameTemplate>* templates, Q
     standardOut->flush();
     return false;
 }
+
+void List::listTemplatesByModel(QList<GameTemplate>* templates, QTextStream* standardOut) {
+    struct ModelList {
+        QString modelHash;
+        QList<QString>* templateNames;
+    };
+
+    *standardOut << "Listing which templates include what models, organized by model hash value:" << endl;
+    QList<ModelList> templatesByHash = QList<ModelList>();
+
+    for (int templateIndex = 0; templateIndex < templates->length(); templateIndex++) {
+
+        const GameTemplate* currentTemplate = &(templates->at(templateIndex));
+        for (int hashIndex = 0; hashIndex < currentTemplate->data.length(); hashIndex++) {
+            uint32_t currentHash = currentTemplate->data.at(hashIndex).first;
+            // Check if the hash is handling a 3D model
+            if (currentHash == 0x5042725B) {
+                QByteArray modelHashBytes = currentTemplate->data.at(hashIndex).second;
+                QString modelHash = modelHashBytes.toHex();
+
+                bool modelAlreadyUsed = false;
+                for (int i = 0; i < templatesByHash.length(); i++) {
+                    if (templatesByHash.at(i).modelHash == modelHash) {
+                        modelAlreadyUsed = true;
+                        templatesByHash.at(i).templateNames->push_back(currentTemplate->name);
+                    }
+                }
+
+                // Add this template to the list of templates
+                // that use this particular model.
+                if (modelAlreadyUsed == false) {
+                    QList<QString>* newTemplateList = new QList<QString>();
+                    newTemplateList->push_front(currentTemplate->name);
+
+                    ModelList newModelList;
+                    newModelList.modelHash = modelHash;
+                    newModelList.templateNames = newTemplateList;
+                    templatesByHash.push_front(newModelList);
+                }
+            }
+        }
+    }
+
+    // Sort all template lists alphabetically
+    for (int i = 0; i < templatesByHash.length(); i++) {
+        QList<QString>* currentList = templatesByHash.at(i).templateNames;
+        currentList->sort(Qt::CaseSensitive);
+    }
+
+    //Print all templates by model
+    if (templatesByHash.length() > 0) {
+
+        for (int i = 0; i < templatesByHash.length(); i++) {
+            // Improve readability by adding a line of spacing between each model.
+            if (i > 0) {
+                *standardOut << endl;
+            }
+
+            *standardOut << "\tModel: " << templatesByHash.at(i).modelHash.toUpper() << endl;
+            QList<QString>* templates = templatesByHash.at(i).templateNames;
+            for (int j = 0; j < templates->length(); j++) {
+                *standardOut << "\t\t" << templates->at(j) << endl;
+            }
+        }
+    } else {
+        *standardOut << "\tNo models found in the loaded templates." << endl;
+    }
+
+    // Clean up pointer lists.
+    for (int i = 0; i < templatesByHash.length(); i++) {
+        delete templatesByHash.at(i).templateNames;
+    }
+    standardOut->flush();
+}
